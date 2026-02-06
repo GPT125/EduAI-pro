@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI Pro - Intelligent Teaching Assistant Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login/Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+        <div class="welcome-gradient"></div>
+        <div class="welcome-container">
+            <div class="welcome-content">
+                <div class="logo-animation">
+                    <div class="logo-circle">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                </div>
+                <h1 class="welcome-title">EduAI Pro</h1>
+                <p class="welcome-subtitle">Intelligent teaching assistant powered by AI</p>
+                <p class="welcome-description">Create AI-powered learning assistants for your students with project-based knowledge management</p>
+                
+                <div class="auth-cards">
+                    <div class="auth-card" onclick="app.showLogin('teacher')">
+                        <div class="auth-card-icon teacher-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <h3>For Teachers</h3>
+                        <p>Create classes, manage projects, and configure AI assistants</p>
+                        <button class="auth-card-btn">Get Started <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    
+                    <div class="auth-card" onclick="app.showLogin('student')">
+                        <div class="auth-card-icon student-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>For Students</h3>
+                        <p>Get instant help from AI tailored to your class</p>
+                        <button class="auth-card-btn">Join Class <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Login -->
+    <div id="teacher-login" class="screen auth-screen">
+        <div class="auth-container">
+            <button class="back-button" onclick="app.showScreen('welcome-screen')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <div class="auth-box">
+                <div class="auth-header">
+                    <div class="auth-icon teacher-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h2>Teacher Login</h2>
+                    <p>Access your dashboard and manage your classes</p>
+                </div>
+                <form onsubmit="app.teacherLogin(event)" class="auth-form">
+                    <div class="input-group">
+                        <label><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" id="teacher-email" placeholder="teacher@school.edu" required>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="teacher-password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="primary-button full-width">
+                        <span>Sign In</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <div class="auth-note">
+                        <i class="fas fa-info-circle"></i>
+                        Demo: Use any email/password to login
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Login -->
+    <div id="student-login" class="screen auth-screen">
+        <div class="auth-container">
+            <button class="back-button" onclick="app.showScreen('welcome-screen')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <div class="auth-box">
+                <div class="auth-header">
+                    <div class="auth-icon student-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h2>Student Access</h2>
+                    <p>Join your class with a code from your teacher</p>
+                </div>
+                <form onsubmit="app.studentLogin(event)" class="auth-form">
+                    <div class="input-group">
+                        <label><i class="fas fa-user"></i> Your Name</label>
+                        <input type="text" id="student-name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-key"></i> Class Code</label>
+                        <input type="text" id="class-code" placeholder="6-digit code" maxlength="6" required>
+                    </div>
+                    <button type="submit" class="primary-button full-width">
+                        <span>Join Class</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <div class="auth-note">
+                        <i class="fas fa-info-circle"></i>
+                        Ask your teacher for the class code
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Dashboard -->
+    <div id="teacher-dashboard" class="screen">
+        <nav class="top-navbar">
+            <div class="navbar-left">
+                <div class="brand">
+                    <i class="fas fa-brain"></i>
+                    <span>EduAI Pro</span>
+                </div>
+            </div>
+            <div class="navbar-right">
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span id="teacher-name-display"></span>
+                    <button onclick="app.logout()" class="logout-button">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="dashboard-layout">
+            <aside class="sidebar">
+                <div class="sidebar-nav">
+                    <button class="nav-item active" data-tab="overview" onclick="app.switchTab('overview')">
+                        <i class="fas fa-th-large"></i>
+                        <span>Overview</span>
+                    </button>
+                    <button class="nav-item" data-tab="classes" onclick="app.switchTab('classes')">
+                        <i class="fas fa-school"></i>
+                        <span>Classes</span>
+                    </button>
+                    <button class="nav-item" data-tab="projects" onclick="app.switchTab('projects')">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Projects</span>
+                    </button>
+                    <button class="nav-item" data-tab="knowledge" onclick="app.switchTab('knowledge')">
+                        <i class="fas fa-brain"></i>
+                        <span>Knowledge Base</span>
+                    </button>
+                    <button class="nav-item" data-tab="ai-config" onclick="app.switchTab('ai-config')">
+                        <i class="fas fa-cog"></i>
+                        <span>AI Configuration</span>
+                    </button>
+                    <button class="nav-item" data-tab="students" onclick="app.switchTab('students')">
+                        <i class="fas fa-users"></i>
+                        <span>Students</span>
+                    </button>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <!-- Overview Tab -->
+                <div id="tab-overview" class="tab-panel active">
+                    <div class="content-header">
+                        <div>
+                            <h1>Dashboard Overview</h1>
+                            <p class="subtitle">Monitor your classes and student engagement</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-school"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-classes">0</div>
+                                <div class="stat-label">Active Classes</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-students">0</div>
+                                <div class="stat-label">Total Students</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-folder-open"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-projects">0</div>
+                                <div class="stat-label">Active Projects</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon orange">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-knowledge">0</div>
+                                <div class="stat-label">Knowledge Items</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-school"></i> Recent Classes</h3>
+                            </div>
+                            <div id="recent-classes" class="panel-content"></div>
+                        </div>
+                        
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-comments"></i> Recent Activity</h3>
+                            </div>
+                            <div id="recent-activity" class="panel-content"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Classes Tab -->
+                <div id="tab-classes" class="tab-panel">
+                    <div class="content-header">
+                        <div>
+                            <h1>My Classes</h1>
+                            <p class="subtitle">Manage your classes and access codes</p>
+                        </div>
+                        <button class="primary-button" onclick="app.createClass()">
+                            <i class="fas fa-plus"></i>
+                            <span>Create Class</span>
+                        </button>
+                    </div>
+                    <div id="classes-grid" class="grid-layout"></div>
+                </div>
+
+                <!-- Projects Tab -->
+                <div id="tab-projects" class="tab-panel">
+                    <div class="content-header">
+                        <div>
+                            <h1>Projects</h1>
+                            <p class="subtitle">Organize knowledge by projects within classes</p>
+                        </div>
+                        <button class="primary-button" onclick="app.createProject()">
+                            <i class="fas fa-plus"></i>
+                            <span>Create Project</span>
+                        </button>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="project-class-filter" class="filter-select" onchange="app.filterProjects()">
+                            <option value="">All Classes</option>
+                        </select>
+                    </div>
+                    <div id="projects-grid" class="grid-layout"></div>
+                </div>
+
+                <!-- Knowledge Base Tab -->
+                <div id="tab-knowledge" class="tab-panel">
+                    <div class="content-header">
+                        <div>
+                            <h1>Knowledge Base</h1>
+                            <p class="subtitle">Add information for your AI assistant</p>
+                        </div>
+                        <button class="primary-button" onclick="app.addKnowledge()">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Knowledge</span>
+                        </button>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="knowledge-class-filter" class="filter-select" onchange="app.filterKnowledge()">
+                            <option value="">All Classes</option>
+                        </select>
+                        <select id="knowledge-project-filter" class="filter-select" onchange="app.filterKnowledge()">
+                            <option value="">All Projects</option>
+                        </select>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="knowledge-search" placeholder="Search knowledge..." oninput="app.searchKnowledge()">
+                        </div>
+                    </div>
+                    <div id="knowledge-list" class="knowledge-container"></div>
+                </div>
+
+                <!-- AI Configuration Tab -->
+                <div id="tab-ai-config" class="tab-panel">
+                    <div class="content-header">
+                        <div>
+                            <h1>AI Configuration</h1>
+                            <p class="subtitle">Configure how your AI assistant responds to students</p>
+                        </div>
+                    </div>
+
+                    <div class="config-grid">
+                        <div class="config-panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-globe"></i> Global Rules</h3>
+                                <p>Apply to all classes and projects</p>
+                            </div>
+                            <div class="panel-content">
+                                <textarea id="global-rules" class="config-textarea" placeholder="Example: Always encourage critical thinking. Don't give direct answers to homework, guide students to discover solutions."></textarea>
+                                <button class="primary-button" onclick="app.saveRules('global')">
+                                    <i class="fas fa-save"></i>
+                                    <span>Save Global Rules</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="config-panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-school"></i> Class-Specific Rules</h3>
+                                <p>Override for specific classes</p>
+                            </div>
+                            <div class="panel-content">
+                                <select id="rules-class-select" class="select-input" onchange="app.loadClassRules()">
+                                    <option value="">Select a class</option>
+                                </select>
+                                <textarea id="class-rules" class="config-textarea" placeholder="Add rules specific to this class..."></textarea>
+                                <button class="primary-button" onclick="app.saveRules('class')">
+                                    <i class="fas fa-save"></i>
+                                    <span>Save Class Rules</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="config-panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-folder-open"></i> Project-Specific Rules</h3>
+                                <p>Fine-tune for individual projects</p>
+                            </div>
+                            <div class="panel-content">
+                                <select id="rules-project-select" class="select-input" onchange="app.loadProjectRules()">
+                                    <option value="">Select a project</option>
+                                </select>
+                                <textarea id="project-rules" class="config-textarea" placeholder="Add rules specific to this project..."></textarea>
+                                <button class="primary-button" onclick="app.saveRules('project')">
+                                    <i class="fas fa-save"></i>
+                                    <span>Save Project Rules</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Students Tab -->
+                <div id="tab-students" class="tab-panel">
+                    <div class="content-header">
+                        <div>
+                            <h1>Students</h1>
+                            <p class="subtitle">View and manage enrolled students</p>
+                        </div>
+                    </div>
+                    <div class="filter-bar">
+                        <select id="students-class-filter" class="filter-select" onchange="app.filterStudents()">
+                            <option value="">All Classes</option>
+                        </select>
+                    </div>
+                    <div id="students-grid" class="grid-layout"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="student-dashboard" class="screen">
+        <nav class="top-navbar student-navbar">
+            <div class="navbar-left">
+                <div class="brand">
+                    <i class="fas fa-brain"></i>
+                    <span id="student-class-title">EduAI Pro</span>
+                </div>
+            </div>
+            <div class="navbar-right">
+                <div class="user-menu">
+                    <div class="user-avatar student-avatar">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <span id="student-name-display"></span>
+                    <button onclick="app.logout()" class="logout-button">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="chat-layout">
+            <aside class="chat-sidebar">
+                <div class="project-selector">
+                    <label><i class="fas fa-folder-open"></i> Current Project</label>
+                    <select id="student-project-select" class="select-input" onchange="app.switchStudentProject()">
+                        <option value="">General Questions</option>
+                    </select>
+                </div>
+
+                <div class="info-panel">
+                    <h3><i class="fas fa-info-circle"></i> Quick Info</h3>
+                    <div id="quick-info" class="quick-info-list"></div>
+                </div>
+
+                <div class="help-panel">
+                    <h4><i class="fas fa-question-circle"></i> Need Help?</h4>
+                    <p>Ask me about:</p>
+                    <ul class="help-topics">
+                        <li>Due dates & deadlines</li>
+                        <li>Assignment submission</li>
+                        <li>Course materials</li>
+                        <li>Project requirements</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="chat-main">
+                <div id="chat-messages" class="messages-container"></div>
+                <div class="chat-input-area">
+                    <div class="typing-indicator" id="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                    <div class="input-container">
+                        <textarea id="student-input" placeholder="Ask a question..." rows="1"></textarea>
+                        <button onclick="app.sendMessage()" class="send-button" id="send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="class-modal" class="modal">
+        <div class="modal-overlay" onclick="app.closeModal('class-modal')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-school"></i> Create New Class</h2>
+                <button class="close-modal" onclick="app.closeModal('class-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Class Name *</label>
+                    <input type="text" id="modal-class-name" placeholder="e.g., AP Biology Period 3">
+                </div>
+                <div class="input-group">
+                    <label>Subject *</label>
+                    <input type="text" id="modal-class-subject" placeholder="e.g., Biology">
+                </div>
+                <div class="input-group">
+                    <label>Grade Level</label>
+                    <input type="text" id="modal-class-grade" placeholder="e.g., 11th Grade">
+                </div>
+                <div class="input-group">
+                    <label>Description</label>
+                    <textarea id="modal-class-description" rows="3" placeholder="Optional description"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-button" onclick="app.closeModal('class-modal')">Cancel</button>
+                <button class="primary-button" onclick="app.saveClass()">
+                    <i class="fas fa-check"></i>
+                    <span>Create Class</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="project-modal" class="modal">
+        <div class="modal-overlay" onclick="app.closeModal('project-modal')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-folder-open"></i> Create New Project</h2>
+                <button class="close-modal" onclick="app.closeModal('project-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Class *</label>
+                    <select id="modal-project-class" class="select-input">
+                        <option value="">Select a class</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Project Name *</label>
+                    <input type="text" id="modal-project-name" placeholder="e.g., Cell Biology Research">
+                </div>
+                <div class="input-group">
+                    <label>Due Date</label>
+                    <input type="date" id="modal-project-due">
+                </div>
+                <div class="input-group">
+                    <label>Description</label>
+                    <textarea id="modal-project-description" rows="3" placeholder="Project details and requirements"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-button" onclick="app.closeModal('project-modal')">Cancel</button>
+                <button class="primary-button" onclick="app.saveProject()">
+                    <i class="fas fa-check"></i>
+                    <span>Create Project</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="knowledge-modal" class="modal">
+        <div class="modal-overlay" onclick="app.closeModal('knowledge-modal')"></div>
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-brain"></i> Add Knowledge</h2>
+                <button class="close-modal" onclick="app.closeModal('knowledge-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Class *</label>
+                    <select id="modal-knowledge-class" class="select-input" onchange="app.updateProjectDropdown()">
+                        <option value="">Select a class</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Project</label>
+                    <select id="modal-knowledge-project" class="select-input">
+                        <option value="">General (applies to whole class)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Question / Topic *</label>
+                    <input type="text" id="modal-knowledge-question" placeholder="e.g., When is the assignment due?">
+                </div>
+                <div class="input-group">
+                    <label>Answer / Information *</label>
+                    <textarea id="modal-knowledge-answer" rows="4" placeholder="Provide detailed answer or information"></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Tags (comma-separated)</label>
+                    <input type="text" id="modal-knowledge-tags" placeholder="e.g., deadline, assignment, grading">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-button" onclick="app.closeModal('knowledge-modal')">Cancel</button>
+                <button class="primary-button" onclick="app.saveKnowledge()">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Knowledge</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
